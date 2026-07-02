@@ -17,10 +17,8 @@
     --sans:'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   }
   *{box-sizing:border-box} html,body{margin:0}
-  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;
-    -webkit-font-smoothing:antialiased;padding:20px 16px calc(28px + env(safe-area-inset-bottom));display:flex;justify-content:center;}
-  .card{width:100%;max-width:440px;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;
-    box-shadow:0 1px 2px rgba(14,23,38,.04),0 12px 32px rgba(14,23,38,.06);}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;padding:20px 16px calc(28px + env(safe-area-inset-bottom));display:flex;justify-content:center;}
+  .card{width:100%;max-width:440px;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 1px 2px rgba(14,23,38,.04),0 12px 32px rgba(14,23,38,.06);}
   .band{background:var(--ink);color:#fff;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;}
   .band .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#aeb7c4;font-weight:600}
   .band .hrv{font-family:var(--mono);font-size:20px;color:var(--gold);font-weight:700;line-height:1}
@@ -28,10 +26,12 @@
   .who .to{font-size:12px;color:var(--faint);margin:0 0 3px}
   .who .name{font-size:18px;font-weight:600;margin:0;letter-spacing:-.01em}
   .amount{padding:12px 22px 4px}
-  .amount .cap{font-size:12px;color:var(--faint);margin:0 0 5px}
-  .amount .val{font-family:var(--mono);font-size:26px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:baseline;gap:7px}
-  .amount .val .cur{font-size:15px;color:var(--muted);font-weight:600}
-  .amount .note{font-size:11.5px;color:var(--faint);margin:5px 2px 0}
+  .amount .cap{font-size:12px;color:var(--faint);margin:0 0 6px}
+  .amount-input-wrap{position:relative}
+  .amount-input-wrap .cur{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:16px;color:var(--faint);font-weight:600;pointer-events:none;}
+  #amountInput{width:100%;font-family:var(--mono);font-size:26px;font-weight:700;color:var(--ink);background:#FBFCFD;border:1.5px solid var(--line-strong);border-radius:11px;padding:12px 44px 12px 14px;letter-spacing:-.01em;transition:border-color .14s,box-shadow .14s,background .14s;}
+  #amountInput:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px var(--accent-soft)}
+  .amount .note{font-size:11.5px;color:var(--faint);margin:6px 2px 0}
   .purpose-line{padding:8px 22px 4px;font-size:13px;color:var(--muted)}
   .purpose-line b{color:var(--ink);font-weight:500}
   .qr-wrap{padding:14px 22px 4px;display:flex;flex-direction:column;align-items:center}
@@ -40,23 +40,21 @@
   .qr-cap{font-size:12.5px;color:var(--muted);text-align:center;margin:12px 6px 0;max-width:34ch}
   .qr-cap b{color:var(--ink);font-weight:600}
   .actions{padding:16px 22px 2px}
-  button.save-btn,a.open-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;text-decoration:none;
-    font-family:var(--sans);font-size:16px;font-weight:600;padding:15px 16px;border-radius:12px;border:0;cursor:pointer;transition:background .14s,transform .04s,border-color .14s;}
-  button.save-btn{background:var(--accent);color:#fff}
-  button.save-btn:hover{background:var(--accent-dark)} button.save-btn:active{transform:translateY(1px)}
-  button.save-btn:disabled{opacity:.45;cursor:not-allowed}
-  button.save-btn svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2}
-  a.open-btn{background:#fff;color:var(--ink);border:1px solid var(--line-strong);margin-top:10px}
-  a.open-btn:hover{background:#F4F7FA} a.open-btn:active{transform:translateY(1px)}
-  a.open-btn svg{width:18px;height:18px;fill:none;stroke:var(--ink);stroke-width:2}
-  .open-sub{font-size:11.5px;color:var(--faint);text-align:center;margin:9px 4px 0;line-height:1.45}
-  /* editable requisites form */
-  .reqform{margin:14px 22px 0;border-top:1px solid var(--line);padding-top:16px}
+  button.btn,a.btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;text-decoration:none;font-family:var(--sans);font-size:15px;font-weight:600;padding:14px 16px;border-radius:12px;border:1px solid var(--line-strong);cursor:pointer;transition:background .14s,transform .04s,border-color .14s;background:#fff;color:var(--ink);margin-top:10px}
+  button.btn:first-child,a.btn:first-child{margin-top:0}
+  button.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  button.btn.primary:hover{background:var(--accent-dark)}
+  button.btn:hover,a.btn:hover{background:#F4F7FA}
+  button.btn:active,a.btn:active{transform:translateY(1px)}
+  button.btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+  button.btn.primary svg{stroke:#fff}
+  .open-sub{font-size:11.5px;color:var(--faint);text-align:center;margin:10px 4px 0;line-height:1.45}
+  .reqform{margin:16px 22px 0;border-top:1px solid var(--line);padding-top:16px}
   .reqform h3{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:600;margin:0 0 4px;display:flex;align-items:center;gap:8px}
   .reqform h3::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
   .reqform .subh{font-size:11.5px;color:var(--faint);margin:0 0 14px}
-  .field{margin-bottom:13px}
-  .field:last-child{margin-bottom:0}
+  .field{margin-bottom:13px} .field:last-child{margin-bottom:0}
   label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px}
   label .hint{font-weight:400;color:var(--faint);font-size:11.5px}
   input[type=text]{width:100%;font-family:var(--mono);font-size:14px;color:var(--ink);background:#FBFCFD;border:1px solid var(--line-strong);border-radius:9px;padding:11px 12px;transition:border-color .14s,box-shadow .14s,background .14s;}
@@ -64,8 +62,8 @@
   input[type=text]:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px var(--accent-soft)}
   input.bad{border-color:var(--warn)}
   .msg{font-size:11.5px;margin-top:4px;color:var(--warn)}
-  .msg.ok{color:var(--ok)}
-  /* chooser */
+  .saved-tag{font-size:11px;color:var(--ok);margin-top:12px;display:flex;align-items:center;gap:6px;opacity:0;transition:opacity .3s}
+  .saved-tag.show{opacity:1}
   details.choose{margin:12px 22px 0;border-top:1px solid var(--line);padding-top:4px}
   details.choose>summary{list-style:none;cursor:pointer;padding:10px 0;font-size:13px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:7px;}
   details.choose>summary::-webkit-details-marker{display:none}
@@ -86,8 +84,7 @@
   a.alt-btn:hover{background:#F4F7FA}
   .foot{padding:16px 22px 18px;text-align:center}
   .foot p{font-size:11px;color:var(--faint);margin:0;line-height:1.5}
-  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13px;font-weight:500;
-    padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50;}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13px;font-weight:500;padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   @media (prefers-reduced-motion: reduce){*{transition:none !important}}
 </style>
@@ -98,8 +95,8 @@
     <div class="who"><p class="to">Отримувач</p><p class="name" id="o_name">—</p></div>
     <div class="amount">
       <p class="cap">Сума до сплати</p>
-      <div class="val"><span>0</span><span class="cur">грн</span></div>
-      <p class="note">Суму вкажете у банківському застосунку самостійно</p>
+      <div class="amount-input-wrap"><input id="amountInput" type="text" inputmode="decimal" value="0" autocomplete="off" aria-label="Сума до сплати"><span class="cur">грн</span></div>
+      <p class="note" id="amountNote">0 — покупець введе суму сам у банку</p>
     </div>
     <div class="purpose-line">Призначення: <b id="o_purpose">—</b></div>
     <div class="qr-wrap">
@@ -108,11 +105,15 @@
       <p class="qr-cap">Скануйте камерою — або <b>з застосунку потрібного банку</b> (Приват24, monobank тощо), щоб платити саме з нього</p>
     </div>
     <div class="actions">
-      <button class="save-btn" id="saveBtn">
+      <button class="btn primary" id="saveBtn">
         <svg viewBox="0 0 24 24"><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3M12 3v13M7 11l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Зберегти QR-код для друку
       </button>
-      <a class="open-btn" id="openBtn" href="#" rel="noopener">
+      <button class="btn" id="linkBtn">
+        <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Посилання на оплату
+      </button>
+      <a class="btn" id="openBtn" href="#" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Відкрити банківський застосунок
       </a>
@@ -121,7 +122,7 @@
 
     <div class="reqform">
       <h3>Реквізити для оплати</h3>
-      <p class="subh">Введіть реквізити будь-якого ФОП / компанії — QR згенерується автоматично</p>
+      <p class="subh">Заповніть один раз — браузер їх запам'ятає. QR згенерується автоматично.</p>
       <div class="field">
         <label for="i_name">Отримувач <span class="hint">— ПІБ або назва</span></label>
         <input type="text" id="i_name" maxlength="140" value="ФОП Шелест Павло Леонідович" autocomplete="off">
@@ -140,6 +141,7 @@
         <label for="i_purpose">Призначення платежу</label>
         <input type="text" id="i_purpose" maxlength="280" value="Оплата за товар" autocomplete="off">
       </div>
+      <div class="saved-tag" id="savedTag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg> Збережено у браузері</div>
     </div>
 
     <details class="choose">
@@ -157,134 +159,124 @@
   var BASE_URL="https://bank.gov.ua/qr/";
   var VERSION="002", ENCODING="2", FUNC="UCT";
   var CAPTION="Скануйте камерою — або з застосунку потрібного банку (Приват24, monobank тощо), щоб платити саме з нього";
+  var LSKEY="oplata_reqs_v1";
 
-  // ---- Windows-1251 encoder ----
   var W={0x0402:0x80,0x0403:0x81,0x201A:0x82,0x0453:0x83,0x201E:0x84,0x2026:0x85,0x2020:0x86,0x2021:0x87,0x20AC:0x88,0x2030:0x89,0x0409:0x8A,0x2039:0x8B,0x040A:0x8C,0x040C:0x8D,0x040B:0x8E,0x040F:0x8F,0x0452:0x90,0x2018:0x91,0x2019:0x92,0x201C:0x93,0x201D:0x94,0x2022:0x95,0x2013:0x96,0x2014:0x97,0x2122:0x99,0x0459:0x9A,0x203A:0x9B,0x045A:0x9C,0x045C:0x9D,0x045B:0x9E,0x045F:0x9F,0x00A0:0xA0,0x040E:0xA1,0x045E:0xA2,0x0408:0xA3,0x00A4:0xA4,0x0490:0xA5,0x00A6:0xA6,0x00A7:0xA7,0x0401:0xA8,0x00A9:0xA9,0x0404:0xAA,0x00AB:0xAB,0x00AC:0xAC,0x00AD:0xAD,0x00AE:0xAE,0x0407:0xAF,0x00B0:0xB0,0x00B1:0xB1,0x0406:0xB2,0x0456:0xB3,0x0491:0xB4,0x00B5:0xB5,0x00B6:0xB6,0x00B7:0xB7,0x0451:0xB8,0x2116:0xB9,0x0454:0xBA,0x00BB:0xBB,0x0458:0xBC,0x0405:0xBD,0x0455:0xBE,0x0457:0xBF};
   function w1251(str){var o=[];for(var i=0;i<str.length;i++){var c=str.charCodeAt(i);if(c<0x80)o.push(c);else if(c>=0x0410&&c<=0x044F)o.push(0xC0+(c-0x0410));else if(W[c]!==undefined)o.push(W[c]);else o.push(0x3F);}return o;}
   function b64urlBytes(b){var s="";for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
-
   function cleanIban(v){return (v||"").replace(/\s+/g,"").toUpperCase();}
-  function spaceIban(v){return cleanIban(v).replace(/(.{4})/g,"$1 ").trim();}
 
-  // state (mutable — read from inputs)
-  var cfg={name:"",iban:"",code:"",purpose:""};
+  var cfg={name:"",iban:"",code:"",purpose:"",amountStr:""};
+
+  function fmtAmtField(n){var s=n.toFixed(2).replace(/0+$/,"").replace(/\.$/,"");return "UAH"+s;}
 
   function buildPayload(){
-    // сума завжди порожня — платник вводить у банку
-    var data=["BCD",VERSION,ENCODING,FUNC,"",cfg.name,cfg.iban,"",cfg.code,"","",cfg.purpose,"",""].join("\n");
+    var data=["BCD",VERSION,ENCODING,FUNC,"",cfg.name,cfg.iban,cfg.amountStr,cfg.code,"","",cfg.purpose,"",""].join("\n");
     return b64urlBytes(w1251(data));
   }
   function buildUrl(){return BASE_URL+buildPayload();}
   function intentUrl(pkg){var u=buildUrl();return "intent://"+u.replace(/^https:\/\//,"")+"#Intent;scheme=https;package="+pkg+";S.browser_fallback_url="+encodeURIComponent(u)+";end";}
-  function altUrl(){var data=["BCD","003","1","ICT","",cfg.name,cfg.iban,"",cfg.code,"","",cfg.purpose,"","","","",""].join("\n");var b=new TextEncoder().encode(data),s="";for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return "https://qr.bank.gov.ua/"+btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
+  function altUrl(){var data=["BCD","003","1","ICT","",cfg.name,cfg.iban,cfg.amountStr,cfg.code,"","",cfg.purpose,"","","","",""].join("\n");var b=new TextEncoder().encode(data),s="";for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return "https://qr.bank.gov.ua/"+btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
 
-  // ---- QR module painter (shared) ----
   function makeQR(text){var qr=qrcode(0,"H");qr.addData(text);qr.make();return qr;}
   function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
   function badge(ctx,cx,cy,bs){
     ctx.fillStyle="#FFFFFF";rr(ctx,cx-bs/2-bs*0.09,cy-bs/2-bs*0.09,bs*1.18,bs*1.18,bs*0.22);ctx.fill();
     ctx.fillStyle="#1F3AEB";rr(ctx,cx-bs/2,cy-bs/2,bs,bs,bs*0.18);ctx.fill();
-    ctx.fillStyle="#FFFFFF";ctx.font="700 "+Math.round(bs*0.62)+"px 'IBM Plex Mono', Arial, sans-serif";
-    ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("\u20B4",cx,cy+bs*0.02);
+    ctx.fillStyle="#FFFFFF";ctx.font="700 "+Math.round(bs*0.62)+"px 'IBM Plex Mono', Arial, sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("\u20B4",cx,cy+bs*0.02);
   }
-
-  // on-screen QR (with quiet zone), sized by module count
   function drawQRScreen(canvas,text){
     if(typeof qrcode==="undefined")return false;
     var qr=makeQR(text),n=qr.getModuleCount(),quiet=4,cell=6,size=(n+quiet*2)*cell;
     canvas.width=size;canvas.height=size;
     var ctx=canvas.getContext("2d");ctx.fillStyle="#FFFFFF";ctx.fillRect(0,0,size,size);ctx.fillStyle="#0E1726";
     for(var r=0;r<n;r++)for(var k=0;k<n;k++)if(qr.isDark(r,k))ctx.fillRect((k+quiet)*cell,(r+quiet)*cell,cell,cell);
-    badge(ctx,size/2,size/2,Math.round(size*0.20));
-    return true;
+    badge(ctx,size/2,size/2,Math.round(size*0.20));return true;
   }
-  // print QR into a given ctx region (no quiet — card gives margin)
   function paintQRInto(ctx,text,ox,oy,size){
     var qr=makeQR(text),n=qr.getModuleCount(),cell=size/n;
     ctx.fillStyle="#0E1726";
     for(var r=0;r<n;r++)for(var k=0;k<n;k++)if(qr.isDark(r,k))ctx.fillRect(ox+k*cell,oy+r*cell,cell+0.6,cell+0.6);
     badge(ctx,ox+size/2,oy+size/2,Math.round(size*0.20));
   }
+  function wrapText(ctx,text,maxW){var words=(text||"").split(" "),lines=[],cur="";for(var i=0;i<words.length;i++){var t=cur?cur+" "+words[i]:words[i];if(ctx.measureText(t).width>maxW&&cur){lines.push(cur);cur=words[i];}else cur=t;}if(cur)lines.push(cur);return lines;}
 
-  function wrapText(ctx,text,maxW){
-    var words=(text||"").split(" "),lines=[],cur="";
-    for(var i=0;i<words.length;i++){var t=cur?cur+" "+words[i]:words[i];if(ctx.measureText(t).width>maxW&&cur){lines.push(cur);cur=words[i];}else cur=t;}
-    if(cur)lines.push(cur);return lines;
-  }
-
-  // ---- build printable card ----
+  // ---- printable A4 card ----
   function buildPrintCanvas(){
-    var W2=1000, cardX=120, cardW=760, cardY=300, cardH=760, qpad=64;
+    var Wd=1654, Hd=Math.round(Wd*1.41421), cx=Wd/2;
+    var cardW=Math.round(Wd*0.60), cardX=Math.round((Wd-cardW)/2), cardH=cardW;
+    var qpad=Math.round(cardW*0.075), qsize=cardW-2*qpad;
+    var fT=Math.round(Wd*0.033), fN=Math.round(Wd*0.042), fC=Math.round(Wd*0.025);
+    var lhT=Math.round(fT*1.3), lhN=Math.round(fN*1.28), lhC=Math.round(fC*1.4);
     var tmp=document.createElement("canvas").getContext("2d");
-    tmp.font="700 42px 'IBM Plex Sans', Arial, sans-serif";
-    var nameLines=wrapText(tmp,cfg.name,840).slice(0,2);
-    tmp.font="500 26px 'IBM Plex Sans', Arial, sans-serif";
-    var capLines=wrapText(tmp,CAPTION,820);
-    var capTop=cardY+cardH+56;
-    var H2=Math.ceil(capTop+(capLines.length-1)*36+50);
+    tmp.font="700 "+fN+"px 'IBM Plex Sans', Arial, sans-serif";
+    var nameLines=wrapText(tmp,cfg.name,cardW+Wd*0.12).slice(0,2);
+    tmp.font="500 "+fC+"px 'IBM Plex Sans', Arial, sans-serif";
+    var capLines=wrapText(tmp,CAPTION,cardW+Wd*0.10);
+    var gap1=Math.round(Wd*0.032), gap2=Math.round(Wd*0.028);
+    var titleH=lhT+nameLines.length*lhN;
+    var blockH=titleH+gap1+cardH+gap2+capLines.length*lhC;
+    var startY=Math.max(Math.round(Wd*0.05),(Hd-blockH)/2);
 
-    var cv=document.createElement("canvas");cv.width=W2;cv.height=H2;
+    var cv=document.createElement("canvas");cv.width=Wd;cv.height=Hd;
     var ctx=cv.getContext("2d");
+    var g=ctx.createLinearGradient(0,0,Wd,Hd);g.addColorStop(0,"#2A40F0");g.addColorStop(1,"#0E1AA0");
+    ctx.fillStyle=g;ctx.fillRect(0,0,Wd,Hd);
+    var rg=ctx.createRadialGradient(Wd*0.19,Hd*0.13,0,Wd*0.19,Hd*0.13,Wd*0.75);rg.addColorStop(0,"rgba(255,255,255,0.15)");rg.addColorStop(1,"rgba(255,255,255,0)");
+    ctx.fillStyle=rg;ctx.fillRect(0,0,Wd,Hd);
 
-    // background
-    var g=ctx.createLinearGradient(0,0,W2,H2);g.addColorStop(0,"#2A40F0");g.addColorStop(1,"#0E1AA0");
-    ctx.fillStyle=g;ctx.fillRect(0,0,W2,H2);
-    var rg=ctx.createRadialGradient(190,150,0,190,150,720);rg.addColorStop(0,"rgba(255,255,255,0.18)");rg.addColorStop(1,"rgba(255,255,255,0)");
-    ctx.fillStyle=rg;ctx.fillRect(0,0,W2,H2);
-
-    // title
-    ctx.textAlign="center";ctx.fillStyle="#FFFFFF";
-    ctx.font="500 34px 'IBM Plex Sans', Arial, sans-serif";ctx.textBaseline="alphabetic";
-    ctx.fillText("Оплата за реквізитами",W2/2,116);
-    ctx.font="700 42px 'IBM Plex Sans', Arial, sans-serif";
-    var ny=180;for(var i=0;i<nameLines.length;i++){ctx.fillText(nameLines[i],W2/2,ny);ny+=54;}
-
-    // white card
-    ctx.save();
-    ctx.shadowColor="rgba(0,0,0,0.20)";ctx.shadowBlur=34;ctx.shadowOffsetY=14;
-    ctx.fillStyle="#FFFFFF";rr(ctx,cardX,cardY,cardW,cardH,34);ctx.fill();
-    ctx.restore();
-
-    // QR
-    paintQRInto(ctx,buildUrl(),cardX+qpad,cardY+qpad,cardW-qpad*2);
-
-    // caption
-    ctx.fillStyle="#FFFFFF";ctx.font="500 26px 'IBM Plex Sans', Arial, sans-serif";ctx.textAlign="center";
-    var cy=capTop;for(var j=0;j<capLines.length;j++){ctx.fillText(capLines[j],W2/2,cy);cy+=36;}
-
+    ctx.textAlign="center";ctx.fillStyle="#FFFFFF";ctx.textBaseline="alphabetic";
+    var y=startY;
+    ctx.font="500 "+fT+"px 'IBM Plex Sans', Arial, sans-serif";ctx.fillText("Оплата за реквізитами",cx,y+fT*0.82);y+=lhT;
+    ctx.font="700 "+fN+"px 'IBM Plex Sans', Arial, sans-serif";
+    for(var i=0;i<nameLines.length;i++){ctx.fillText(nameLines[i],cx,y+fN*0.82);y+=lhN;}
+    y+=gap1;
+    var cardTop=y;
+    ctx.save();ctx.shadowColor="rgba(0,0,0,0.22)";ctx.shadowBlur=Math.round(Wd*0.02);ctx.shadowOffsetY=Math.round(Wd*0.008);
+    ctx.fillStyle="#FFFFFF";rr(ctx,cardX,cardTop,cardW,cardH,Math.round(cardW*0.045));ctx.fill();ctx.restore();
+    paintQRInto(ctx,buildUrl(),cardX+qpad,cardTop+qpad,qsize);
+    y=cardTop+cardH+gap2;
+    ctx.fillStyle="#FFFFFF";ctx.font="500 "+fC+"px 'IBM Plex Sans', Arial, sans-serif";
+    for(var j=0;j<capLines.length;j++){ctx.fillText(capLines[j],cx,y+fC*0.82);y+=lhC;}
     return cv;
   }
 
   function el(id){return document.getElementById(id);}
+  var i_name=el("i_name"),i_iban=el("i_iban"),i_code=el("i_code"),i_purpose=el("i_purpose"),amountInput=el("amountInput");
 
-  // ---- platform ----
+  // ---- localStorage ----
+  function loadReqs(){try{var raw=localStorage.getItem(LSKEY);if(raw){var o=JSON.parse(raw);if(o.name!=null)i_name.value=o.name;if(o.iban!=null)i_iban.value=o.iban;if(o.code!=null)i_code.value=o.code;if(o.purpose!=null)i_purpose.value=o.purpose;}}catch(e){}}
+  function saveReqs(){try{localStorage.setItem(LSKEY,JSON.stringify({name:i_name.value,iban:i_iban.value,code:i_code.value,purpose:i_purpose.value}));flashSaved();}catch(e){}}
+  var savedT;
+  function flashSaved(){var t=el("savedTag");t.classList.add("show");clearTimeout(savedT);savedT=setTimeout(function(){t.classList.remove("show");},1600);}
+
   var ua=navigator.userAgent||"";
   var isAndroid=/Android/i.test(ua);
   var isIOS=/iPhone|iPad|iPod/i.test(ua)||(/Macintosh/.test(ua)&&'ontouchend' in document);
-
-  // ---- validation + refresh ----
-  var i_name=el("i_name"),i_iban=el("i_iban"),i_code=el("i_code"),i_purpose=el("i_purpose");
   var valid=false;
 
-  function readAndValidate(){
-    cfg.name=i_name.value.trim();
-    cfg.iban=cleanIban(i_iban.value);
-    cfg.code=i_code.value.trim();
-    cfg.purpose=i_purpose.value.trim();
+  function parseAmount(){
+    var v=(amountInput.value||"").replace(/[^\d.,]/g,"").replace(",",".");
+    var parts=v.split(".");if(parts.length>2)v=parts[0]+"."+parts.slice(1).join("");
+    v=v.replace(/^(\d*\.?\d{0,2}).*$/,"$1");
+    if(amountInput.value!==v)amountInput.value=v;
+    var n=parseFloat(v);
+    if(!isNaN(n)&&n>0&&n<=999999999.99){cfg.amountStr=fmtAmtField(n);el("amountNote").textContent="Фіксована сума у QR-коді";}
+    else{cfg.amountStr="";el("amountNote").textContent="0 — покупець введе суму сам у банку";}
+  }
 
+  function readAndValidate(){
+    cfg.name=i_name.value.trim();cfg.iban=cleanIban(i_iban.value);cfg.code=i_code.value.trim();cfg.purpose=i_purpose.value.trim();
     var ibanOk=/^UA\d{27}$/.test(cfg.iban);
     i_iban.classList.toggle("bad",cfg.iban.length>0&&!ibanOk);
     el("m_iban").textContent=cfg.iban.length===0?"":(ibanOk?"":"Має бути UA і 27 цифр");
-    el("m_iban").className="msg";
-
     var codeOk=/^\d{8}$/.test(cfg.code)||/^\d{10}$/.test(cfg.code);
     i_code.classList.toggle("bad",cfg.code.length>0&&!codeOk);
     el("m_code").textContent=cfg.code.length===0?"":(codeOk?"":"8 цифр (ЄДРПОУ) або 10 (ІПН)");
-    el("m_code").className="msg";
-
     valid=cfg.name!==""&&ibanOk&&codeOk;
   }
 
+  function bankBtn(name,sub,color,letter,href){return '<a class="bank-btn" href="'+href+'" rel="noopener"><span class="ico" style="background:'+color+'">'+letter+'</span><span><span class="nm">'+name+'</span><br><span class="sub">'+sub+'</span></span><span class="arr">&#8250;</span></a>';}
   function renderChooser(){
     var box=el("chooseBody");if(!box)return;
     if(!valid){box.innerHTML='<div class="ios-note">Заповніть реквізити, щоб обрати банк.</div>';return;}
@@ -300,59 +292,52 @@
       box.innerHTML=h;
     }
   }
-  function bankBtn(name,sub,color,letter,href){
-    return '<a class="bank-btn" href="'+href+'" rel="noopener"><span class="ico" style="background:'+color+'">'+letter+'</span><span><span class="nm">'+name+'</span><br><span class="sub">'+sub+'</span></span><span class="arr">&#8250;</span></a>';
-  }
 
   function refresh(){
-    readAndValidate();
-    el("o_name").textContent=cfg.name||"—";
-    el("o_purpose").textContent=cfg.purpose||"—";
+    parseAmount();readAndValidate();
+    el("o_name").textContent=cfg.name||"—";el("o_purpose").textContent=cfg.purpose||"—";
     var canvas=el("qrCanvas"),empty=el("qrEmpty");
     if(valid){
-      var url=buildUrl();
-      var ok=drawQRScreen(canvas,url);
-      if(ok){canvas.style.display="block";empty.style.display="none";}
-      else{canvas.style.display="none";empty.style.display="flex";empty.textContent="QR-бібліотека не завантажилась";}
-      el("openBtn").setAttribute("href",url);
-      el("saveBtn").disabled=false;
+      var url=buildUrl();var ok=drawQRScreen(canvas,url);
+      if(ok){canvas.style.display="block";empty.style.display="none";}else{canvas.style.display="none";empty.style.display="flex";empty.textContent="QR-бібліотека не завантажилась";}
+      el("openBtn").setAttribute("href",url);el("saveBtn").disabled=false;el("linkBtn").disabled=false;
     } else {
-      canvas.style.display="none";empty.style.display="flex";
-      empty.textContent="Заповніть реквізити нижче, щоб з'явився QR-код";
-      el("openBtn").setAttribute("href","#");
-      el("saveBtn").disabled=true;
+      canvas.style.display="none";empty.style.display="flex";empty.textContent="Заповніть реквізити нижче, щоб з'явився QR-код";
+      el("openBtn").setAttribute("href","#");el("saveBtn").disabled=true;el("linkBtn").disabled=true;
     }
     renderChooser();
   }
 
-  [i_name,i_iban,i_code,i_purpose].forEach(function(inp){inp.addEventListener("input",refresh);});
+  loadReqs();
+  [i_name,i_iban,i_code,i_purpose].forEach(function(inp){inp.addEventListener("input",function(){saveReqs();refresh();});});
+  amountInput.addEventListener("input",refresh);
   refresh();
   if(typeof qrcode==="undefined")setTimeout(refresh,700);
 
-  // ---- toast ----
   var toast=el("toast"),toastT;
   function showToast(m){toast.textContent=m||"Готово";toast.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){toast.classList.remove("show");},1600);}
+  function copyText(text,cb){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(cb).catch(function(){fb();cb();});}else{fb();cb();}function fb(){var t=document.createElement("textarea");t.value=text;t.style.position="fixed";t.style.opacity="0";document.body.appendChild(t);t.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(t);}}
 
-  // ---- save for print ----
+  // save print QR
   el("saveBtn").addEventListener("click",function(){
     if(!valid)return;
     var go=function(){
       var cv=buildPrintCanvas();
-      var name=(cfg.name||"oplata").replace(/[^\wА-Яа-яІіЇїЄєҐґ]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40)||"oplata";
-      cv.toBlob(function(blob){
-        if(blob){
-          var url=URL.createObjectURL(blob);
-          var a=document.createElement("a");a.href=url;a.download="qr-"+name+".png";
-          document.body.appendChild(a);a.click();document.body.removeChild(a);
-          setTimeout(function(){URL.revokeObjectURL(url);},2000);
-          showToast("QR збережено");
-        } else {
-          var a2=document.createElement("a");a2.href=cv.toDataURL("image/png");a2.download="qr-"+name+".png";
-          document.body.appendChild(a2);a2.click();document.body.removeChild(a2);showToast("QR збережено");
-        }
-      },"image/png");
+      var nm=(cfg.name||"oplata").replace(/[^\wА-Яа-яІіЇїЄєҐґ]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40)||"oplata";
+      var done=function(){showToast("QR збережено (A4)");};
+      if(cv.toBlob){cv.toBlob(function(blob){if(blob){var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="qr-"+nm+".png";document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(url);},2000);done();}else fallback();},"image/png");}
+      else fallback();
+      function fallback(){var a=document.createElement("a");a.href=cv.toDataURL("image/png");a.download="qr-"+nm+".png";document.body.appendChild(a);a.click();document.body.removeChild(a);done();}
     };
-    if(document.fonts&&document.fonts.ready){document.fonts.ready.then(go).catch(go);}else{go();}
+    if(document.fonts&&document.fonts.ready){document.fonts.ready.then(go).catch(go);}else go();
+  });
+
+  // share / copy link
+  el("linkBtn").addEventListener("click",function(){
+    if(!valid)return;
+    var url=buildUrl();
+    if(navigator.share){navigator.share({title:"Оплата за реквізитами",text:"Оплата — "+cfg.name,url:url}).catch(function(){});}
+    else{copyText(url,function(){showToast("Посилання скопійовано");});}
   });
 })();
 </script>
