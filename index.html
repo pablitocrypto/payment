@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Генератор QR · Оплата за реквізитами</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#1F3AEB">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Оплата QR">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -175,9 +182,10 @@
           <p class="ul">Універсальне посилання на оплату</p>
           <div class="uni-link" id="uniLink"></div>
           <div class="uni-actions">
-            <button class="primary" id="uniShare">Поділитися</button>
-            <button id="uniCopy">Скопіювати</button>
+            <button class="primary" id="uniShare">Поділитися сторінкою</button>
+            <button id="uniCopy">Скопіювати посилання</button>
           </div>
+          <p style="font-size:11px;color:var(--faint);margin:8px 2px 0">«Поділитися» надсилає цю сторінку з вибором банку. «Скопіювати» — пряме посилання вище.</p>
         </div>
       </div>
     </div>
@@ -338,6 +346,20 @@
   }
 
   loadReqs();
+  // params from a shared link override saved values
+  (function(){
+    var P=new URLSearchParams(location.search);
+    if(P.has("name")||P.has("iban")||P.has("code")||P.has("purpose")||P.has("amt")){
+      if(P.get("name"))i_name.value=P.get("name");
+      if(P.get("iban"))i_iban.value=P.get("iban");
+      if(P.get("code"))i_code.value=P.get("code");
+      if(P.get("purpose"))i_purpose.value=P.get("purpose");
+      if(P.get("amt"))amountInput.value=P.get("amt");
+    }
+  })();
+  if("serviceWorker" in navigator && location.protocol==="https:"){
+    navigator.serviceWorker.register("./sw.js").catch(function(){});
+  }
   [i_name,i_iban,i_code,i_purpose].forEach(function(inp){inp.addEventListener("input",function(){saveReqs();refresh();});});
   amountInput.addEventListener("input",refresh);
   refresh();
@@ -397,11 +419,19 @@
   });
   el("modalClose").addEventListener("click",function(){el("modalBack").classList.remove("show");});
   el("modalBack").addEventListener("click",function(e){if(e.target===el("modalBack"))el("modalBack").classList.remove("show");});
+  function pageShareUrl(){
+    var p=new URLSearchParams();
+    p.set("name",cfg.name);p.set("iban",cfg.iban);p.set("code",cfg.code);
+    if(cfg.purpose)p.set("purpose",cfg.purpose);
+    var a=(amountInput.value||"").trim();
+    if(a && parseFloat(a)>0)p.set("amt",a);
+    return location.origin+location.pathname+"?"+p.toString();
+  }
   el("uniCopy").addEventListener("click",function(){copyText(buildUrl(),function(){showToast("Посилання скопійовано");});});
   el("uniShare").addEventListener("click",function(){
-    var url=buildUrl();
-    if(navigator.share){navigator.share({title:"Оплата за реквізитами",text:"Оплата — "+cfg.name,url:url}).catch(function(){});}
-    else{copyText(url,function(){showToast("Посилання скопійовано");});}
+    var url=pageShareUrl();
+    if(navigator.share){navigator.share({title:"Оплата — "+cfg.name,text:"Оплата за реквізитами: оберіть свій банк і сплатіть за 2 кліки",url:url}).catch(function(){});}
+    else{copyText(url,function(){showToast("Посилання на сторінку скопійовано");});}
   });
 })();
 </script>
