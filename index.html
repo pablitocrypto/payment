@@ -51,6 +51,9 @@
   button.btn:first-child,a.btn:first-child{margin-top:0}
   button.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
   button.btn.primary:hover{background:var(--accent-dark)}
+  button.btn.pay{background:var(--accent);color:#fff;border-color:var(--accent);font-size:18px;padding:18px 16px;box-shadow:0 6px 18px rgba(31,58,235,.35)}
+  button.btn.pay:hover{background:var(--accent-dark)}
+  button.btn.pay svg{stroke:#fff;width:20px;height:20px}
   button.btn:hover,a.btn:hover{background:#F4F7FA}
   button.btn:active,a.btn:active{transform:translateY(1px)}
   button.btn:disabled{opacity:.45;cursor:not-allowed}
@@ -123,14 +126,14 @@
       <p class="note" id="amountNote">0 — покупець введе суму сам у банку</p>
     </div>
     <div class="purpose-line">Призначення: <b id="o_purpose">—</b></div>
-    <div class="qr-wrap">
-      <canvas id="qrCanvas" style="display:none"></canvas>
-      <img id="qrImg" alt="QR-код для оплати" style="width:212px;height:212px;image-rendering:pixelated;border-radius:8px">
-      <div class="qr-empty" id="qrEmpty" style="display:none">Заповніть реквізити нижче, щоб з'явився QR-код</div>
-      <p class="qr-cap">Скануйте камерою — або <b>з застосунку потрібного банку</b>. На iPhone: <b>утримуйте палець на QR</b> — і оберіть банк зі списку</p>
-    </div>
+    <canvas id="qrCanvas" style="display:none"></canvas>
     <div class="actions">
-      <button class="btn primary" id="saveBtn">
+      <button class="btn pay" id="chooseBtn">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Сплатити — обрати банк
+      </button>
+      <p class="open-sub" style="margin-bottom:14px">Натисніть, оберіть свій банк — застосунок відкриється із заповненими реквізитами</p>
+      <button class="btn" id="saveBtn">
         <svg viewBox="0 0 24 24"><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3M12 3v13M7 11l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Зберегти QR-код для друку
       </button>
@@ -138,11 +141,6 @@
         <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Посилання на оплату
       </button>
-      <button class="btn" id="chooseBtn">
-        <svg viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h18" stroke-linecap="round"/></svg>
-        Обрати банк
-      </button>
-      <p class="open-sub">Відкриється застосунок обраного банку із заповненими реквізитами.</p>
     </div>
 
     <div class="reqform">
@@ -223,14 +221,6 @@
     ctx.fillStyle="#FFFFFF";rr(ctx,cx-bs/2-bs*0.09,cy-bs/2-bs*0.09,bs*1.18,bs*1.18,bs*0.22);ctx.fill();
     ctx.fillStyle="#1F3AEB";rr(ctx,cx-bs/2,cy-bs/2,bs,bs,bs*0.18);ctx.fill();
     ctx.fillStyle="#FFFFFF";ctx.font="700 "+Math.round(bs*0.62)+"px 'IBM Plex Mono', Arial, sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("\u20B4",cx,cy+bs*0.02);
-  }
-  function drawQRScreen(canvas,text){
-    if(typeof qrcode==="undefined")return false;
-    var qr=makeQR(text),n=qr.getModuleCount(),quiet=4,cell=6,size=(n+quiet*2)*cell;
-    canvas.width=size;canvas.height=size;
-    var ctx=canvas.getContext("2d");ctx.fillStyle="#FFFFFF";ctx.fillRect(0,0,size,size);ctx.fillStyle="#0E1726";
-    for(var r=0;r<n;r++)for(var k=0;k<n;k++)if(qr.isDark(r,k))ctx.fillRect((k+quiet)*cell,(r+quiet)*cell,cell,cell);
-    badge(ctx,size/2,size/2,Math.round(size*0.20));return true;
   }
   function paintQRInto(ctx,text,ox,oy,size){
     var qr=makeQR(text),n=qr.getModuleCount(),cell=size/n;
@@ -327,22 +317,11 @@
       if(!jumped && !document.hidden) window.location.href=fallback;
     },1600);
   }
-  function renderChooser(){}
 
   function refresh(){
     parseAmount();readAndValidate();
     el("o_name").textContent=cfg.name||"—";el("o_purpose").textContent=cfg.purpose||"—";
-    var canvas=el("qrCanvas"),img=el("qrImg"),empty=el("qrEmpty");
-    if(valid){
-      var url=buildUrl();var ok=drawQRScreen(canvas,url);
-      if(ok){img.src=canvas.toDataURL("image/png");img.style.display="block";empty.style.display="none";}
-      else{img.style.display="none";empty.style.display="flex";empty.textContent="QR-бібліотека не завантажилась";}
-      el("chooseBtn").disabled=false;el("saveBtn").disabled=false;el("linkBtn").disabled=false;
-    } else {
-      img.style.display="none";empty.style.display="flex";empty.textContent="Заповніть реквізити нижче, щоб з'явився QR-код";
-      el("chooseBtn").disabled=true;el("saveBtn").disabled=true;el("linkBtn").disabled=true;
-    }
-    renderChooser();
+    el("chooseBtn").disabled=!valid;el("saveBtn").disabled=!valid;el("linkBtn").disabled=!valid;
   }
 
   loadReqs();
