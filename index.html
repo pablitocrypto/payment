@@ -100,9 +100,10 @@
     </div>
     <div class="purpose-line">Призначення: <b id="o_purpose">—</b></div>
     <div class="qr-wrap">
-      <canvas id="qrCanvas" aria-label="QR-код для оплати"></canvas>
+      <canvas id="qrCanvas" style="display:none"></canvas>
+      <img id="qrImg" alt="QR-код для оплати" style="width:212px;height:212px;image-rendering:pixelated;border-radius:8px">
       <div class="qr-empty" id="qrEmpty" style="display:none">Заповніть реквізити нижче, щоб з'явився QR-код</div>
-      <p class="qr-cap">Скануйте камерою — або <b>з застосунку потрібного банку</b> (Приват24, monobank тощо), щоб платити саме з нього</p>
+      <p class="qr-cap">Скануйте камерою — або <b>з застосунку потрібного банку</b>. На iPhone: <b>утримуйте палець на QR</b> — і оберіть банк зі списку</p>
     </div>
     <div class="actions">
       <button class="btn primary" id="saveBtn">
@@ -277,6 +278,17 @@
   }
 
   function bankBtn(name,sub,color,letter,href){return '<a class="bank-btn" href="'+href+'" rel="noopener"><span class="ico" style="background:'+color+'">'+letter+'</span><span><span class="nm">'+name+'</span><br><span class="sub">'+sub+'</span></span><span class="arr">&#8250;</span></a>';}
+  function schemeBtn(name,scheme,color,letter){return '<a class="bank-btn" href="#" data-scheme="'+scheme+'"><span class="ico" style="background:'+color+'">'+letter+'</span><span><span class="nm">'+name+'</span><br><span class="sub">відкрити саме цей застосунок</span></span><span class="arr">&#8250;</span></a>';}
+  function trySchemeOpen(scheme){
+    var fallback=buildUrl(),jumped=false;
+    var onHide=function(){jumped=true;};
+    document.addEventListener("visibilitychange",onHide,{once:true});
+    window.location.href=scheme;
+    setTimeout(function(){
+      document.removeEventListener("visibilitychange",onHide);
+      if(!jumped && !document.hidden) window.location.href=fallback;
+    },1600);
+  }
   function renderChooser(){
     var box=el("chooseBody");if(!box)return;
     if(!valid){box.innerHTML='<div class="ios-note">Заповніть реквізити, щоб обрати банк.</div>';return;}
@@ -287,22 +299,35 @@
       html+=bankBtn("Інший банк","система запропонує вибір","#1F3AEB","банк",buildUrl());
       html+='</div>';box.innerHTML=html;
     } else {
-      var h='<div class="ios-note">На iPhone застосунок не можна примусово обрати посиланням — це обмеження iOS. <b>Щоб платити з конкретного банку — відскануйте QR вище з його застосунку</b> (Приват24 / monobank → сканер QR).</div>';
+      var payload=buildUrl().replace(/^https:\/\//,"");
+      var h='<div class="bank-grid">';
+      h+=schemeBtn("Monobank","mono://"+payload,"#000000","mono");
+      h+=schemeBtn("Приват24","privat24://"+payload,"#3FA535","П24");
+      h+=schemeBtn("А-Банк","abank24://"+payload,"#21A038","аб");
+      h+='</div>';
+      h+='<div class="ios-note" style="margin-top:10px">Якщо банк відкрився без реквізитів — <b>утримуйте палець на QR вище</b> і оберіть банк зі списку, або відскануйте QR зі сканера у самому банку.</div>';
       h+='<div class="alt-line"><a class="alt-btn" href="'+altUrl()+'" rel="noopener">Спробувати інший застосунок (новіші банки)</a></div>';
       box.innerHTML=h;
+      Array.prototype.forEach.call(box.querySelectorAll("[data-scheme]"),function(b){
+        b.addEventListener("click",function(ev){
+          ev.preventDefault();
+          trySchemeOpen(b.getAttribute("data-scheme"));
+        });
+      });
     }
   }
 
   function refresh(){
     parseAmount();readAndValidate();
     el("o_name").textContent=cfg.name||"—";el("o_purpose").textContent=cfg.purpose||"—";
-    var canvas=el("qrCanvas"),empty=el("qrEmpty");
+    var canvas=el("qrCanvas"),img=el("qrImg"),empty=el("qrEmpty");
     if(valid){
       var url=buildUrl();var ok=drawQRScreen(canvas,url);
-      if(ok){canvas.style.display="block";empty.style.display="none";}else{canvas.style.display="none";empty.style.display="flex";empty.textContent="QR-бібліотека не завантажилась";}
+      if(ok){img.src=canvas.toDataURL("image/png");img.style.display="block";empty.style.display="none";}
+      else{img.style.display="none";empty.style.display="flex";empty.textContent="QR-бібліотека не завантажилась";}
       el("openBtn").setAttribute("href",url);el("saveBtn").disabled=false;el("linkBtn").disabled=false;
     } else {
-      canvas.style.display="none";empty.style.display="flex";empty.textContent="Заповніть реквізити нижче, щоб з'явився QR-код";
+      img.style.display="none";empty.style.display="flex";empty.textContent="Заповніть реквізити нижче, щоб з'явився QR-код";
       el("openBtn").setAttribute("href","#");el("saveBtn").disabled=true;el("linkBtn").disabled=true;
     }
     renderChooser();
