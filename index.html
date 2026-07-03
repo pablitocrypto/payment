@@ -74,6 +74,10 @@
   .msg{font-size:11.5px;margin-top:4px;color:var(--warn)}
   .saved-tag{font-size:11px;color:var(--ok);margin-top:12px;display:flex;align-items:center;gap:6px;opacity:0;transition:opacity .3s}
   .saved-tag.show{opacity:1}
+  details.reqd{margin:14px 22px 0;border-top:1px solid var(--line);padding-top:4px}
+  details.reqd>summary{list-style:none;cursor:pointer;padding:12px 0;font-size:14px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:7px;}
+  details.reqd>summary::-webkit-details-marker{display:none}
+  details.reqd[open] .chev{transform:rotate(90deg)}
   details.choose{margin:12px 22px 0;border-top:1px solid var(--line);padding-top:4px}
   details.choose>summary{list-style:none;cursor:pointer;padding:10px 0;font-size:13px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:7px;}
   details.choose>summary::-webkit-details-marker{display:none}
@@ -106,13 +110,6 @@
   .modal .mh{font-size:12px;color:var(--faint);margin:0 0 14px}
   .modal .close-x{position:absolute;right:14px;top:12px;border:0;background:none;font-size:22px;color:var(--faint);cursor:pointer;line-height:1}
   .modal-inner{position:relative}
-  .uni-block{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
-  .uni-block .ul{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px}
-  .uni-link{font-family:var(--mono);font-size:11px;color:var(--muted);background:#F5F7F9;border:1px solid var(--line);border-radius:8px;padding:8px 10px;word-break:break-all;max-height:58px;overflow:auto}
-  .uni-actions{display:flex;gap:8px;margin-top:10px}
-  .uni-actions button{flex:1;border:1px solid var(--line-strong);background:#fff;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);padding:10px;border-radius:9px;transition:background .12s}
-  .uni-actions button:hover{background:#F2F5F8}
-  .uni-actions button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
   @media (prefers-reduced-motion: reduce){*{transition:none !important}}
 </style>
 </head>
@@ -138,34 +135,36 @@
         Зберегти QR-код для друку
       </button>
       <button class="btn" id="linkBtn">
-        <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Посилання на оплату
+        <svg viewBox="0 0 24 24"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Поділитися сторінкою
       </button>
     </div>
 
-    <div class="reqform">
-      <h3>Реквізити для оплати</h3>
-      <p class="subh">Заповніть один раз — браузер їх запам'ятає. QR згенерується автоматично.</p>
+    <details class="reqd" id="reqDetails">
+      <summary><span class="chev">&#8250;</span> Реквізити для оплати</summary>
+      <div class="reqform" style="margin-top:0;border-top:0;padding-top:8px">
+      <p class="subh">Заповніть один раз — браузер їх запам'ятає.</p>
       <div class="field">
         <label for="i_name">Отримувач <span class="hint">— ПІБ або назва</span></label>
-        <input type="text" id="i_name" maxlength="140" value="ФОП Шелест Павло Леонідович" autocomplete="off">
+        <input type="text" id="i_name" maxlength="140" placeholder="напр. ФОП Іваненко Іван Іванович" autocomplete="off">
       </div>
       <div class="field">
         <label for="i_iban">IBAN <span class="hint">— UA + 27 цифр</span></label>
-        <input type="text" id="i_iban" maxlength="42" value="UA09 3220 0100 0002 6003 3200 1320 7" autocomplete="off">
+        <input type="text" id="i_iban" maxlength="42" placeholder="UA00 0000 0000 0000 0000 0000 000" autocomplete="off">
         <div class="msg" id="m_iban"></div>
       </div>
       <div class="field">
         <label for="i_code">Код отримувача <span class="hint">— ЄДРПОУ (8) або ІПН/РНОКПП (10)</span></label>
-        <input type="text" id="i_code" maxlength="10" value="3085108012" autocomplete="off" inputmode="numeric">
+        <input type="text" id="i_code" maxlength="10" placeholder="напр. 1234567890" autocomplete="off" inputmode="numeric">
         <div class="msg" id="m_code"></div>
       </div>
       <div class="field">
         <label for="i_purpose">Призначення платежу</label>
-        <input type="text" id="i_purpose" maxlength="280" value="Оплата за товар" autocomplete="off">
+        <input type="text" id="i_purpose" maxlength="280" placeholder="напр. Оплата за товар" autocomplete="off">
       </div>
       <div class="saved-tag" id="savedTag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg> Збережено у браузері</div>
-    </div>
+      </div>
+    </details>
 
     <div class="foot"><p>Оплата за стандартом НБУ. Підтвердження — у вашому банку. Дані картки не запитуються.</p></div>
   </main>
@@ -173,18 +172,9 @@
     <div class="modal">
       <div class="modal-inner">
         <button class="close-x" id="modalClose" aria-label="Закрити">&times;</button>
-        <h4>Оберіть банк для оплати</h4>
+        <h4>Оберіть свій банк</h4>
         <p class="mh">Відкриється застосунок із заповненими реквізитами</p>
-        <div id="modalBanks"></div>
-        <div class="uni-block">
-          <p class="ul">Універсальне посилання на оплату</p>
-          <div class="uni-link" id="uniLink"></div>
-          <div class="uni-actions">
-            <button class="primary" id="uniShare">Поділитися сторінкою</button>
-            <button id="uniCopy">Скопіювати посилання</button>
-          </div>
-          <p style="font-size:11px;color:var(--faint);margin:8px 2px 0">«Поділитися» надсилає цю сторінку з вибором банку. «Скопіювати» — пряме посилання вище.</p>
-        </div>
+        <div id="modalBanks" style="max-height:60vh;overflow-y:auto"></div>
       </div>
     </div>
   </div>
@@ -195,7 +185,7 @@
   "use strict";
   var BASE_URL="https://bank.gov.ua/qr/";
   var VERSION="002", ENCODING="2", FUNC="UCT";
-  var CAPTION="Скануйте камерою — або з застосунку потрібного банку (Приват24, monobank тощо), щоб платити саме з нього";
+  var CAPTION="Наведіть камеру телефону на код — відкриється ваш банк. Введіть суму і підтвердіть оплату.";
   var LSKEY="oplata_reqs_v1";
 
   var W={0x0402:0x80,0x0403:0x81,0x201A:0x82,0x0453:0x83,0x201E:0x84,0x2026:0x85,0x2020:0x86,0x2021:0x87,0x20AC:0x88,0x2030:0x89,0x0409:0x8A,0x2039:0x8B,0x040A:0x8C,0x040C:0x8D,0x040B:0x8E,0x040F:0x8F,0x0452:0x90,0x2018:0x91,0x2019:0x92,0x201C:0x93,0x201D:0x94,0x2022:0x95,0x2013:0x96,0x2014:0x97,0x2122:0x99,0x0459:0x9A,0x203A:0x9B,0x045A:0x9C,0x045C:0x9D,0x045B:0x9E,0x045F:0x9F,0x00A0:0xA0,0x040E:0xA1,0x045E:0xA2,0x0408:0xA3,0x00A4:0xA4,0x0490:0xA5,0x00A6:0xA6,0x00A7:0xA7,0x0401:0xA8,0x00A9:0xA9,0x0404:0xAA,0x00AB:0xAB,0x00AC:0xAC,0x00AD:0xAD,0x00AE:0xAE,0x0407:0xAF,0x00B0:0xB0,0x00B1:0xB1,0x0406:0xB2,0x0456:0xB3,0x0491:0xB4,0x00B5:0xB5,0x00B6:0xB6,0x00B7:0xB7,0x0451:0xB8,0x2116:0xB9,0x0454:0xBA,0x00BB:0xBB,0x0458:0xBC,0x0405:0xBD,0x0455:0xBE,0x0457:0xBF};
@@ -235,7 +225,7 @@
     var Wd=1654, Hd=Math.round(Wd*1.41421), cx=Wd/2;
     var cardW=Math.round(Wd*0.60), cardX=Math.round((Wd-cardW)/2), cardH=cardW;
     var qpad=Math.round(cardW*0.075), qsize=cardW-2*qpad;
-    var fT=Math.round(Wd*0.033), fN=Math.round(Wd*0.042), fC=Math.round(Wd*0.025);
+    var fT=Math.round(Wd*0.038), fN=Math.round(Wd*0.048), fC=Math.round(Wd*0.032);
     var lhT=Math.round(fT*1.3), lhN=Math.round(fN*1.28), lhC=Math.round(fC*1.4);
     var tmp=document.createElement("canvas").getContext("2d");
     tmp.font="700 "+fN+"px 'IBM Plex Sans', Arial, sans-serif";
@@ -336,6 +326,16 @@
       if(P.get("amt"))amountInput.value=P.get("amt");
     }
   })();
+  // якщо реквізити не збережені і не передані — розгорнути форму
+  (function(){
+    var hasSaved=false;
+    try{hasSaved=!!localStorage.getItem(LSKEY);}catch(e){}
+    var hasParams=new URLSearchParams(location.search).has("iban");
+    if(!hasSaved && !hasParams){
+      el("reqDetails").open=true;
+      el("o_name").textContent="Заповніть реквізити нижче";
+    }
+  })();
   if("serviceWorker" in navigator && location.protocol==="https:"){
     navigator.serviceWorker.register("./sw.js").catch(function(){});
   }
@@ -362,34 +362,40 @@
     if(document.fonts&&document.fonts.ready){document.fonts.ready.then(go).catch(go);}else go();
   });
 
-  // share / copy link -> modal with bank chooser + universal link
+  // modal: bank chooser only
+  var BANKS=[
+    {n:"Monobank",s:"mono://",p:"com.ftband.mono",c:"#000000",l:"mono"},
+    {n:"Приват24",s:"privat24://",p:"ua.privatbank.ap24",c:"#3FA535",l:"П24"},
+    {n:"Ощадбанк",s:"oschadbank://",p:"ua.oschadbank.online24",c:"#00713C",l:"Ощ"},
+    {n:"ПУМБ",s:"pumb://",p:"com.fuib.android.spot.online",c:"#E4002B",l:"ПУ"},
+    {n:"Райффайзен (MyRaif)",s:"myraif://",p:"ua.raiffeisen.myraif",c:"#FFDD00",l:"Rф"},
+    {n:"Sense Bank",s:"sensebank://",p:"ua.alfabank.mobile.android",c:"#FF4B3A",l:"Se"},
+    {n:"УКРСИБ (UKRSIB)",s:"ukrsib://",p:"com.ukrsibbank.client.android",c:"#004C97",l:"УС"},
+    {n:"А-Банк",s:"abank24://",p:"ua.com.abank",c:"#21A038",l:"аб"}
+  ];
   function renderModalBanks(){
     var box=el("modalBanks");
     var uni=buildUrl();
+    var payload=uni.replace(/^https:\/\//,"");
     var h='<div class="bank-grid">';
-    if(isAndroid){
-      h+=bankBtn("Monobank","відкрити саме цей застосунок","#000000","mono",intentUrl("com.ftband.mono"));
-      h+=bankBtn("Приват24","відкрити саме цей застосунок","#3FA535","П24",intentUrl("ua.privatbank.ap24"));
-      h+=bankBtn("Інший банк","система запропонує вибір","#1F3AEB","банк",uni);
-      h+='</div>';
-      box.innerHTML=h;
-    } else {
-      var payload=uni.replace(/^https:\/\//,"");
-      h+=schemeBtn("Monobank","mono://"+payload,"#000000","mono");
-      h+=schemeBtn("Приват24","privat24://"+payload,"#3FA535","П24");
-      h+=schemeBtn("А-Банк","abank24://"+payload,"#21A038","аб");
-      h+='</div>';
-      box.innerHTML=h;
-      Array.prototype.forEach.call(box.querySelectorAll("[data-scheme]"),function(b){
-        b.addEventListener("click",function(ev){ev.preventDefault();trySchemeOpen(b.getAttribute("data-scheme"));});
-      });
+    for(var i=0;i<BANKS.length;i++){
+      var b=BANKS[i];
+      if(isAndroid) h+=bankBtn(b.n,"відкрити саме цей застосунок",b.c,b.l,intentUrl(b.p));
+      else h+=schemeBtn2(b.n,b.s+payload,b.c,b.l);
     }
-    el("uniLink").textContent=uni;
+    h+=bankBtn("Інший банк","відкриється банк за замовчуванням","#1F3AEB","банк",uni);
+    h+='</div>';
+    box.innerHTML=h;
+    Array.prototype.forEach.call(box.querySelectorAll("[data-scheme]"),function(bn){
+      bn.addEventListener("click",function(ev){ev.preventDefault();trySchemeOpen(bn.getAttribute("data-scheme"));});
+    });
   }
+  function schemeBtn2(name,scheme,color,letter){return '<a class="bank-btn" href="#" data-scheme="'+scheme+'"><span class="ico" style="background:'+color+'">'+letter+'</span><span><span class="nm">'+name+'</span><br><span class="sub">відкрити саме цей застосунок</span></span><span class="arr">&#8250;</span></a>';}
   el("linkBtn").addEventListener("click",function(){
     if(!valid)return;
-    renderModalBanks();
-    el("modalBack").classList.add("show");
+    var url=pageShareUrl();
+    if(navigator.share){navigator.share({title:"Оплата — "+cfg.name,text:"Відкрийте сторінку, оберіть свій банк і сплатіть за 2 кліки",url:url}).catch(function(){});}
+    else{copyText(url,function(){showToast("Посилання на сторінку скопійовано");});}
   });
   el("chooseBtn").addEventListener("click",function(){
     if(!valid)return;
@@ -406,12 +412,6 @@
     if(a && parseFloat(a)>0)p.set("amt",a);
     return location.origin+location.pathname+"?"+p.toString();
   }
-  el("uniCopy").addEventListener("click",function(){copyText(buildUrl(),function(){showToast("Посилання скопійовано");});});
-  el("uniShare").addEventListener("click",function(){
-    var url=pageShareUrl();
-    if(navigator.share){navigator.share({title:"Оплата — "+cfg.name,text:"Оплата за реквізитами: оберіть свій банк і сплатіть за 2 кліки",url:url}).catch(function(){});}
-    else{copyText(url,function(){showToast("Посилання на сторінку скопійовано");});}
-  });
 })();
 </script>
 </body>
