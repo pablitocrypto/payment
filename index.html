@@ -324,6 +324,8 @@
       if(P.get("code"))i_code.value=P.get("code");
       if(P.get("purpose"))i_purpose.value=P.get("purpose");
       if(P.get("amt"))amountInput.value=P.get("amt");
+      saveReqs(); // запам'ятати у браузері одержувача — далі досить відкрити сайт без параметрів
+      try{history.replaceState(null,"",location.pathname);}catch(e){} // прибрати довгий хвіст з адресного рядка
     }
   })();
   // якщо реквізити не збережені і не передані — розгорнути форму
