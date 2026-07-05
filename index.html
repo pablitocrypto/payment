@@ -115,12 +115,12 @@
 </head>
 <body>
   <main class="card">
-    <div class="band"><span class="lbl">Платіж за реквізитами</span><span class="hrv">&#8372;</span></div>
+    <div class="band"><span class="lbl">Платіж за реквізитами IBAN</span><span class="hrv">&#8372;</span></div>
     <div class="who"><p class="to">Отримувач</p><p class="name" id="o_name">—</p></div>
     <div class="amount">
       <p class="cap">Сума до сплати</p>
       <div class="amount-input-wrap"><input id="amountInput" type="text" inputmode="decimal" value="0" autocomplete="off" aria-label="Сума до сплати"><span class="cur">грн</span></div>
-      <p class="note" id="amountNote">0 — покупець введе суму сам у банку</p>
+      <p class="note" id="amountNote">Можна залишити 0 — платник введе суму сам</p>
     </div>
     <div class="purpose-line">Призначення: <b id="o_purpose">—</b></div>
     <canvas id="qrCanvas" style="display:none"></canvas>
@@ -129,21 +129,21 @@
         <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Сплатити — обрати банк
       </button>
-      <p class="open-sub" style="margin-bottom:14px">Натисніть, оберіть свій банк — застосунок відкриється із заповненими реквізитами</p>
+      
       <button class="btn" id="saveBtn">
         <svg viewBox="0 0 24 24"><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3M12 3v13M7 11l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Зберегти QR-код для друку
+        Зберегти QR для друку
       </button>
       <button class="btn" id="linkBtn">
         <svg viewBox="0 0 24 24"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v13" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Поділитися сторінкою
+        Поділитися посиланням на оплату
       </button>
     </div>
 
     <details class="reqd" id="reqDetails">
       <summary><span class="chev">&#8250;</span> Реквізити для оплати</summary>
       <div class="reqform" style="margin-top:0;border-top:0;padding-top:8px">
-      <p class="subh">Заповніть один раз — браузер їх запам'ятає.</p>
+      <p class="subh">Вкажіть один раз — сторінка запам'ятає.</p>
       <div class="field">
         <label for="i_name">Отримувач <span class="hint">— ПІБ або назва</span></label>
         <input type="text" id="i_name" maxlength="140" placeholder="напр. ФОП Іваненко Іван Іванович" autocomplete="off">
@@ -166,14 +166,14 @@
       </div>
     </details>
 
-    <div class="foot"><p>Оплата за стандартом НБУ. Підтвердження — у вашому банку. Дані картки не запитуються.</p></div>
+    <div class="foot"><p>Безпечна оплата за стандартом НБУ 🇺🇦</p></div>
   </main>
   <div class="modal-back" id="modalBack">
     <div class="modal">
       <div class="modal-inner">
         <button class="close-x" id="modalClose" aria-label="Закрити">&times;</button>
         <h4>Оберіть свій банк</h4>
-        <p class="mh">Відкриється застосунок із заповненими реквізитами</p>
+        <p class="mh">Реквізити підставляться автоматично</p>
         <div id="modalBanks" style="max-height:60vh;overflow-y:auto"></div>
       </div>
     </div>
@@ -280,8 +280,8 @@
     v=v.replace(/^(\d*\.?\d{0,2}).*$/,"$1");
     if(amountInput.value!==v)amountInput.value=v;
     var n=parseFloat(v);
-    if(!isNaN(n)&&n>0&&n<=999999999.99){cfg.amountStr=fmtAmtField(n);el("amountNote").textContent="Фіксована сума у QR-коді";}
-    else{cfg.amountStr="";el("amountNote").textContent="0 — покупець введе суму сам у банку";}
+    if(!isNaN(n)&&n>0&&n<=999999999.99){cfg.amountStr=fmtAmtField(n);el("amountNote").textContent="Сума буде підставлена автоматично";}
+    else{cfg.amountStr="";el("amountNote").textContent="Можна залишити 0 — платник введе суму сам";}
   }
 
   function readAndValidate(){
