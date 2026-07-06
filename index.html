@@ -33,7 +33,7 @@
     --sans:'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   }
   *{box-sizing:border-box} html,body{margin:0}
-  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;padding:20px 16px calc(28px + env(safe-area-inset-bottom));display:flex;justify-content:center;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;padding:20px 16px calc(28px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;}
   .card{width:100%;max-width:440px;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 1px 2px rgba(14,23,38,.04),0 12px 32px rgba(14,23,38,.06);}
   .band{background:var(--ink);color:#fff;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;}
   .band .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#aeb7c4;font-weight:600}
@@ -120,6 +120,14 @@
   .modal .close-x{position:absolute;right:14px;top:12px;border:0;background:none;font-size:22px;color:var(--faint);cursor:pointer;line-height:1}
   .modal-inner{position:relative}
   @media (prefers-reduced-motion: reduce){*{transition:none !important}}
+  .faq-list{padding:2px 0 4px}
+  .faq-q{border-bottom:1px solid var(--line)}
+  .faq-q:last-child{border-bottom:0}
+  .faq-q summary{list-style:none;cursor:pointer;padding:11px 2px;font-size:13.5px;font-weight:600;color:var(--ink);display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .faq-q summary::-webkit-details-marker{display:none}
+  .faq-q summary::after{content:"+";color:var(--faint);font-size:17px;font-weight:400;flex:none;line-height:1}
+  .faq-q[open] summary::after{content:"\2013"}
+  .faq-q .faq-a{padding:0 2px 12px;font-size:13px;color:var(--muted);line-height:1.55}
 </style>
 </head>
 <body>
@@ -175,6 +183,36 @@
       </div>
     </details>
 
+    <details class="reqd" id="faqDetails">
+      <summary><span class="chev">&#8250;</span> Часті запитання</summary>
+      <div class="faq-list">
+        <details class="faq-q">
+          <summary>Що таке оплата за QR-кодом на IBAN?</summary>
+          <div class="faq-a">QR-код містить реквізити отримувача, закодовані за єдиним стандартом Національного банку України. Покупець наводить камеру телефону або сканує код у застосунку свого банку — банк відкривається з уже заповненими реквізитами, залишається тільки підтвердити оплату.</div>
+        </details>
+        <details class="faq-q">
+          <summary>Це офіційний спосіб оплати?</summary>
+          <div class="faq-a">Так. Формат затверджено постановою НБУ №97, і з 1 листопада 2025 року він обов'язковий для застосунків усіх банків України — monobank, Приват24, Ощадбанк, ПУМБ та інших. Це не приватний сервіс, а державний стандарт.</div>
+        </details>
+        <details class="faq-q">
+          <summary>Чи потрібен РРО або чек при оплаті на IBAN?</summary>
+          <div class="faq-a">За роз'ясненнями ДПС, переказ коштів з рахунку на рахунок — це банківська операція, а не готівковий чи картковий розрахунок, тож застосування РРО/ПРРО не є обов'язковим. Це не звільняє від сплати податків: отриманий дохід все одно потрібно проводити і декларувати згідно з обраною системою оподаткування.</div>
+        </details>
+        <details class="faq-q">
+          <summary>Скільки коштує оплата через QR-код?</summary>
+          <div class="faq-a">Для покупця це, як правило, безкоштовно або з мінімальною комісією — залежно від правил конкретного банку на переказ між різними банками. Продавцю генерація та використання такого QR-коду не коштує нічого: без абонплати і без комісії за сам сервіс.</div>
+        </details>
+        <details class="faq-q">
+          <summary>Чому при скануванні відкрився не той банк?</summary>
+          <div class="faq-a">Телефон сам обирає, яким застосунком відкрити посилання, якщо не вказано конкретний банк. Щоб платити саме з потрібного банку — натисніть і утримуйте палець на QR-коді та оберіть банк зі списку, скористайтеся кнопкою «Обрати банк» на цій сторінці, або відскануйте код прямо зі сканера у застосунку потрібного банку.</div>
+        </details>
+        <details class="faq-q">
+          <summary>Чи безпечно платити за таким QR-кодом?</summary>
+          <div class="faq-a">Так. Дані картки чи рахунку покупця ніде не запитуються і нікуди не передаються. QR-код містить лише реквізити отримувача — IBAN, ім'я та код — оплата йде напряму з банку покупця на рахунок отримувача, без посередників і збереження даних.</div>
+        </details>
+      </div>
+    </details>
+
     <div class="foot"><p>Безпечна оплата за стандартом НБУ 🇺🇦</p></div>
   </main>
   <div class="modal-back" id="modalBack">
@@ -187,6 +225,22 @@
       </div>
     </div>
   </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type":"Question","name":"Що таке оплата за QR-кодом на IBAN?","acceptedAnswer":{"@type":"Answer","text":"QR-код містить реквізити отримувача, закодовані за єдиним стандартом Національного банку України. Покупець наводить камеру телефону або сканує код у застосунку свого банку — банк відкривається з уже заповненими реквізитами, залишається тільки підтвердити оплату."}},
+      {"@type":"Question","name":"Це офіційний спосіб оплати?","acceptedAnswer":{"@type":"Answer","text":"Так. Формат затверджено постановою НБУ №97, і з 1 листопада 2025 року він обов'язковий для застосунків усіх банків України — monobank, Приват24, Ощадбанк, ПУМБ та інших."}},
+      {"@type":"Question","name":"Чи потрібен РРО або чек при оплаті на IBAN?","acceptedAnswer":{"@type":"Answer","text":"За роз'ясненнями ДПС, переказ коштів з рахунку на рахунок — це банківська операція, а не готівковий чи картковий розрахунок, тож застосування РРО/ПРРО не є обов'язковим. Дохід все одно потрібно декларувати."}},
+      {"@type":"Question","name":"Скільки коштує оплата через QR-код?","acceptedAnswer":{"@type":"Answer","text":"Для покупця це зазвичай безкоштовно або з мінімальною комісією залежно від банку. Продавцю генерація QR-коду не коштує нічого."}},
+      {"@type":"Question","name":"Чому при скануванні відкрився не той банк?","acceptedAnswer":{"@type":"Answer","text":"Телефон сам обирає застосунок, якщо не вказано конкретний банк. Утримайте палець на QR-коді та оберіть банк зі списку, або скористайтесь кнопкою «Обрати банк»."}},
+      {"@type":"Question","name":"Чи безпечно платити за таким QR-кодом?","acceptedAnswer":{"@type":"Answer","text":"Так. Дані картки покупця ніде не запитуються. QR-код містить лише реквізити отримувача, оплата йде напряму між банками без посередників."}}
+    ]
+  }
+  </script>
+
   <div class="toast" id="toast">Готово</div>
 
 <script>
